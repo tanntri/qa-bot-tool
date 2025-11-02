@@ -9,3 +9,4 @@ A RAG chatbot tool for bug reports and user feedback insights.
 4. After building has finished, run "docker-compose up".
 5. Now the containers should be running, and the FastAPI backend server should be at "localhost:8000".
 6. The frontend UI should be accessible at "localhost:8501".
+7. To stop the application, go back to the terminal and ctrl+c out of the running docker, then run "docker-compose down", and the docker should stop
