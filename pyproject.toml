@@ -1,0 +1,38 @@
+[project]
+name = "qa-tool-bot"
+version = "0.0.1"
+description = "Langgraph QA chatbot tool"
+requires-python = "==3.12.*"
+dependencies = [
+    "python-dotenv==1.1.1",
+    "langchain==0.3.27",
+    "langchain-community==0.3.27",
+    "langchain-core==0.3.74",
+    "langchain-chroma==0.2.5",
+    "langchain-openai==0.3.30",
+    "langchain-text-splitters==0.3.9",
+    "langchainhub==0.1.21",
+    "langgraph==0.6.2",
+    "pydantic==2.11.7",
+    "pydantic-settings==2.10.1",
+    "pydantic_core==2.33.2",
+    "docling==2.43.0",
+    "chromadb==1.0.17",
+    "uvicorn==0.38.0",
+    "fastapi==0.120.1",
+    "streamlit==1.50.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = { find = { where = ["src"] } }
+
+[tool.setuptools.package-data]
+"*" = ["*.txt", "*.md"]
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 80

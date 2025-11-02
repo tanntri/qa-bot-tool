@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # Backend Service
+  backend:
+    build: .
+    command: >
+      sh -c "
+        echo 'Running document ingestion...' &&
+        uv run python src/utils/ingest.py &&
+        echo 'Starting backend server...' &&
+        uv run uvicorn backend.main:app --host 0.0.0.0 --port 8000
+      "
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./chroma_db:/app/chroma_db
+      - ./data:/app/data
+      - ./.env:/app/.env
+    environment:
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Service
+  frontend:
+    build: .
+    command: uv run streamlit run frontend/main.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://backend:8000/chat
+      - PYTHONPATH=/app
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  chroma_db:
+  data:
