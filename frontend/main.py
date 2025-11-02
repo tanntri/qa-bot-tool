@@ -10,7 +10,6 @@ st.set_page_config(page_title="Internal QA Tool", layout="centered")
 
 # Define API endpoint
 API_URL = os.getenv("API_URL", "http://localhost:8000")
-print(f"Using API URL: {API_URL}")
 
 # Streamlit UI Elements
 st.title("QA Chatbot")

@@ -19,5 +19,3 @@ def retriever_tool(query: str) -> str:
 if __name__ == "__main__":
     sample_query = "Any customer feedback about scrollbar related issues?"
     retrieved_content = retriever_tool.invoke(sample_query)
-    print("Retrieved Documents:")
-    print(retrieved_content)

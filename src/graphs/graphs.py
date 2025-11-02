@@ -43,10 +43,8 @@ def should_generate_or_retrieve(state: QaBotState) -> str:
     software_bug_or_user_feedback_relevant = state["software_bug_or_user_feedback_relevant"].lower()
 
     if 'yes' in software_bug_or_user_feedback_relevant:
-        print("go to retrieve")
         return "retrieve"
     else:
-        print("go to generate")
         return "generate"
 
 async def grade_question(state: QaBotState) -> QaBotState:
@@ -65,11 +63,7 @@ async def grade_question(state: QaBotState) -> QaBotState:
     relevance_checker = is_question_bug_or_user_feedback_related()
     score = await relevance_checker.ainvoke({"question": question})
 
-    print(f"Question relevance graded as: {score.binary_score.lower()}")
-
     grade = 'yes' if 'yes' in score.binary_score.lower() else 'no'
-
-    print(f"Question relevance graded as: {grade}")
 
     return {"question": question, "software_bug_or_user_feedback_relevant": grade}
     
@@ -121,7 +115,6 @@ async def grade_documents(state: QaBotState) -> QaBotState:
         Returns:
             state (dict): Updates documents_relevant key graded for documents relevance against user question
     """
-    print("Grading documents...")
     question = state["question"]
     documents = state["documents"]
 
@@ -139,23 +132,18 @@ async def grade_documents(state: QaBotState) -> QaBotState:
         # documents is neither string nor iterable, convert to string directly
         document_text = str(documents)
 
-    print("Document text for grading:", document_text)
-
     score = await retrieval_grader.ainvoke({"question": question, "document": document_text})
 
     grade = score.binary_score
-    print(f"Document relevance graded as: {grade}")
+
     if grade == 'yes':
-        print("documents are relevant")
         documents_relevant = "yes"
     else:
-        print("documents are NOT relevant")
         documents_relevant = "no"
     return {"documents": documents, "question": question, "documents_relevant": documents_relevant}
 
 async def retrieve_documents(state: QaBotState) -> QaBotState:
     """Retrieve documents based on the question."""
-    print("Retrieving documents...")
     question = state["question"]
 
     try:
@@ -163,8 +151,6 @@ async def retrieve_documents(state: QaBotState) -> QaBotState:
         
         if not documents:
             return {"documents": [], "question": question}
-
-        print(documents)
         
         return {"documents": documents, "question": question}
     
@@ -174,7 +160,6 @@ async def retrieve_documents(state: QaBotState) -> QaBotState:
 
 
 async def generate(state: QaBotState) -> QaBotState:
-    print("Generating answer...")
     system = """   
         You are an expert in Quality Assurance. Your main task is to generate a detailed answer to the question about
         the software bugs or user feedback on the software. You are talking to a product team or engineering team member
@@ -264,7 +249,6 @@ async def get_response_from_rag(question: str) -> str:
     try:
         rag_graph = create_rag_graph()
         response = await rag_graph.ainvoke({"question": question})
-        print(response["generation"].content)
         return response["generation"].content
     
     except Exception as e:
